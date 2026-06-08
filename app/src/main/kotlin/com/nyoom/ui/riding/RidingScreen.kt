@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -77,10 +79,10 @@ fun RidingScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("nyoom", fontSize = 32.sp)
+        Text("Let's go!", fontSize = 32.sp)
 
         Card(modifier = Modifier.fillMaxWidth()) {
-            Column(modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                 Text("${formatTime(elapsedTimeMs)}", fontSize = 48.sp)
                 Spacer(modifier = Modifier.height(8.dp))
                 Text("Time")
@@ -89,13 +91,13 @@ fun RidingScreen() {
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
-                Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("${String.format("%.2f", uiState.distanceKm)} km", fontSize = 20.sp)
                     Text("Distance")
                 }
             }
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
-                Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("${String.format("%.1f", uiState.currentSpeedKmh)} km/h", fontSize = 20.sp)
                     Text("Speed")
                 }
@@ -104,13 +106,13 @@ fun RidingScreen() {
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
-                Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("${String.format("%.1f", uiState.avgSpeedKmh)} km/h", fontSize = 16.sp)
                     Text("Avg Speed")
                 }
             }
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
-                Column(modifier = Modifier.padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("${String.format("%.1f", uiState.maxSpeedKmh)} km/h", fontSize = 16.sp)
                     Text("Max Speed")
                 }
@@ -129,7 +131,7 @@ fun RidingScreen() {
                     } else {
                         permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                }) {
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color.Green)) {
                     Text("Start")
                 }
             } else {
@@ -138,14 +140,14 @@ fun RidingScreen() {
                         Text("Pause")
                     }
                 } else {
-                    Button(onClick = { viewModel.resume() }) {
+                    Button(onClick = { viewModel.resume() }, colors = ButtonDefaults.buttonColors(containerColor = Color.Green)) {
                         Text("Resume")
                     }
                 }
                 Button(onClick = {
                     viewModel.stop()
                     elapsedTimeMs = 0
-                }) {
+                }, colors = ButtonDefaults.buttonColors(containerColor = Color.Red)) {
                     Text("Stop")
                 }
             }

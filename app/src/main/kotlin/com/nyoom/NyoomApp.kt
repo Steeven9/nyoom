@@ -19,5 +19,4 @@ class NyoomApp : Application() {
     }
 
     fun getRepository(): TripRepository = repository
-    fun getLocationTracker(): LocationTracker = locationTracker
 }

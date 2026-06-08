@@ -1,7 +1,7 @@
 package com.nyoom.ui.map
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.nyoom.data.model.Coordinate
 import com.nyoom.data.repository.TripRepository
@@ -17,15 +17,17 @@ data class MapUiState(
 
 class MapViewModel(
     private val repository: TripRepository,
-    savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(MapUiState())
     val uiState: StateFlow<MapUiState> = _uiState.asStateFlow()
 
-    private val tripId: Int = savedStateHandle["tripId"] ?: 0
+    private var tripId: Int = 0
 
-    init {
-        loadCoordinates()
+    fun setTripId(id: Int) {
+        if (tripId != id) {
+            tripId = id
+            loadCoordinates()
+        }
     }
 
     private fun loadCoordinates() {
@@ -37,3 +39,11 @@ class MapViewModel(
         }
     }
 }
+
+class MapViewModelFactory(private val repository: TripRepository) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return MapViewModel(repository) as T
+    }
+}
+

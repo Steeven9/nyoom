@@ -14,13 +14,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.nyoom.ui.LocalLocationTracker
 import com.nyoom.ui.LocalTripRepository
+import com.nyoom.ui.about.AboutScreen
 import com.nyoom.ui.diary.DiaryScreen
+import com.nyoom.ui.map.MapScreen
 import com.nyoom.ui.riding.RidingScreen
 
 class MainActivity : ComponentActivity() {
@@ -29,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val app = applicationContext as NyoomApp
             val repository = app.getRepository()
-            val locationTracker = app.getLocationTracker()
+            val locationTracker = app.locationTracker
 
             androidx.compose.runtime.CompositionLocalProvider(
                 LocalTripRepository provides repository,
@@ -37,8 +41,12 @@ class MainActivity : ComponentActivity() {
             ) {
                 val navController = rememberNavController()
 
+                val navBackStackEntry by navController.currentBackStackEntryAsState()
+                val currentRoute = navBackStackEntry?.destination?.route
+                val showBottomBar = currentRoute?.startsWith("map") != true
+
                 Scaffold(
-                    bottomBar = { BottomNavBar(navController) }
+                    bottomBar = { if (showBottomBar) BottomNavBar(navController) }
                 ) { paddingValues ->
                     NavHost(
                         navController = navController,
@@ -46,7 +54,17 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.padding(paddingValues)
                     ) {
                         composable("riding") { RidingScreen() }
-                        composable("diary") { DiaryScreen() }
+                        composable("diary") { DiaryScreen(navController) }
+                        composable("about") { AboutScreen() }
+                        composable(
+                            "map/{tripId}",
+                            arguments = listOf(
+                                navArgument("tripId") { type = NavType.IntType }
+                            )
+                        ) { backStackEntry ->
+                            val tripId = backStackEntry.arguments?.getInt("tripId") ?: 0
+                            MapScreen(tripId = tripId, navController = navController)
+                        }
                     }
                 }
             }
@@ -71,6 +89,12 @@ private fun BottomNavBar(navController: NavController) {
             onClick = { navController.navigate("diary") },
             label = { Text("Diary") },
             icon = { Icon(painterResource(android.R.drawable.ic_menu_info_details), "Diary") }
+        )
+        NavigationBarItem(
+            selected = currentRoute == "about",
+            onClick = { navController.navigate("about") },
+            label = { Text("About") },
+            icon = { Icon(painterResource(android.R.drawable.ic_menu_help), "About") }
         )
     }
 }
