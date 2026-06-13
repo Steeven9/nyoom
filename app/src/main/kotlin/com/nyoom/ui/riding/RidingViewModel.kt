@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlin.math.max
 
 data class RidingUiState(
@@ -80,6 +81,18 @@ class RidingViewModel(
             currentTripId = repository.insertTrip(trip).toInt()
             locationTracker.startTracking()
         }
+
+        // Start timer to update elapsed time every 1 second
+        viewModelScope.launch {
+            while (_uiState.value.isRunning) {
+                delay(1000)
+                if (_uiState.value.isRunning && !_uiState.value.isPaused) {
+                    val elapsed = System.currentTimeMillis() - tripStartTime
+                    _uiState.value = _uiState.value.copy(elapsedTimeMs = elapsed)
+                    updateAvgSpeed()
+                }
+            }
+        }
     }
 
     fun pause() {
@@ -94,16 +107,25 @@ class RidingViewModel(
 
     fun stop() {
         locationTracker.stopTracking()
+        val endTime = System.currentTimeMillis()
 
         viewModelScope.launch {
             if (currentTripId != null) {
-                val endTime = System.currentTimeMillis()
                 val trip = repository.getTripById(currentTripId!!) ?: return@launch
+
+                // Calculate final average speed using actual elapsed time
+                val elapsedSeconds = (endTime - tripStartTime) / 1000.0
+                val elapsedHours = elapsedSeconds / 3600.0
+                val finalAvgSpeed = if (elapsedHours > 0) {
+                    _uiState.value.distanceKm / elapsedHours
+                } else {
+                    0.0
+                }
 
                 val updatedTrip = trip.copy(
                     endTime = endTime,
                     distanceKm = _uiState.value.distanceKm,
-                    avgSpeed = _uiState.value.avgSpeedKmh,
+                    avgSpeed = finalAvgSpeed,
                     maxSpeed = _uiState.value.maxSpeedKmh,
                 )
                 repository.updateTrip(updatedTrip)
@@ -117,8 +139,9 @@ class RidingViewModel(
     }
 
     private fun updateAvgSpeed() {
-        val elapsedHours = (_uiState.value.elapsedTimeMs / 1000.0 / 3600.0)
-        if (elapsedHours > 0) {
+        val elapsedSeconds = (_uiState.value.elapsedTimeMs / 1000.0)
+        val elapsedHours = elapsedSeconds / 3600.0
+        if (elapsedHours > 0 && _uiState.value.distanceKm > 0) {
             val avgSpeed = _uiState.value.distanceKm / elapsedHours
             _uiState.value = _uiState.value.copy(avgSpeedKmh = avgSpeed)
         }

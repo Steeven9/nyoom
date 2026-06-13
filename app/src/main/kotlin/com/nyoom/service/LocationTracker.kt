@@ -24,6 +24,8 @@ class LocationTracker(
     private var isTracking = false
     private var lastLocation: Location? = null
 
+    private val pollingInterval = 1000L
+
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
             for (location in result.locations) {
@@ -50,9 +52,9 @@ class LocationTracker(
         _totalDistance.value = 0.0
         _currentSpeed.value = 0.0
 
-        val locationRequest = LocationRequest.Builder(10000)
+        val locationRequest = LocationRequest.Builder(pollingInterval)
             .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
-            .setMaxUpdateDelayMillis(15000)
+            .setMaxUpdateDelayMillis(pollingInterval)
             .build()
 
         try {

@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 data class MapUiState(
     val coordinates: List<Coordinate> = emptyList(),
     val isLoading: Boolean = false,
+    val tripStartTime: Long = 0
 )
 
 class MapViewModel(
@@ -26,13 +27,15 @@ class MapViewModel(
     fun setTripId(id: Int) {
         if (tripId != id) {
             tripId = id
-            loadCoordinates()
+            loadTripData()
         }
     }
 
-    private fun loadCoordinates() {
+    private fun loadTripData() {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(isLoading = true)
+            _uiState.value = _uiState.value.copy(tripStartTime = repository.getTripById(tripId)?.startTime
+                ?: 0)
             repository.observeCoordinatesByTripId(tripId).collect { coordinates ->
                 _uiState.value = _uiState.value.copy(coordinates = coordinates, isLoading = false)
             }

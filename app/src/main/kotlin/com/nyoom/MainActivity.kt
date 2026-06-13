@@ -7,11 +7,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -77,20 +79,35 @@ private fun BottomNavBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
+    val selectedColor = Color(0xFF1565C0)       // Dark blue
+    val unselectedColor = Color(0xFF9E9E9E)     // Grey
+    val indicatorColor = Color(0xFFBBDEFB)      // Light blue pill behind icon
+
+    val navItemColors = NavigationBarItemDefaults.colors(
+        selectedIconColor   = selectedColor,
+        selectedTextColor   = selectedColor,
+        indicatorColor      = indicatorColor,
+        unselectedIconColor = unselectedColor,
+        unselectedTextColor = unselectedColor,
+    )
+
     NavigationBar {
         NavigationBarItem(
+            colors   = navItemColors,
             selected = currentRoute == "riding",
             onClick = { navController.navigate("riding") },
-            label = { Text("Riding") },
-            icon = { Icon(painterResource(android.R.drawable.ic_menu_compass), "Riding") }
+            label = { Text("Ride") },
+            icon = { Icon(painterResource(android.R.drawable.ic_menu_compass), "Ride") }
         )
         NavigationBarItem(
+            colors   = navItemColors,
             selected = currentRoute == "diary",
             onClick = { navController.navigate("diary") },
             label = { Text("Diary") },
-            icon = { Icon(painterResource(android.R.drawable.ic_menu_info_details), "Diary") }
+            icon = { Icon(painterResource(android.R.drawable.ic_menu_mapmode), "Diary") }
         )
         NavigationBarItem(
+            colors   = navItemColors,
             selected = currentRoute == "about",
             onClick = { navController.navigate("about") },
             label = { Text("About") },

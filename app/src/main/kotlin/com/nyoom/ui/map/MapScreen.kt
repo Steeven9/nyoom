@@ -1,12 +1,10 @@
 package com.nyoom.ui.map
 
-import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,11 +20,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nyoom.ui.LocalTripRepository
+import com.nyoom.util.DateTimeUtils.formatDate
 import org.osmdroid.config.Configuration
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory
 import org.osmdroid.util.GeoPoint
@@ -119,18 +117,18 @@ fun MapScreen(tripId: Int, navController: NavController) {
             )
         }
 
-        // Debug info panel with test button
+        // Info panel at the bottom
         Column(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .background(Color.White.copy(alpha = 0.9f))
                 .padding(12.dp)
         ) {
-            Text("Trip ID: $tripId", color = Color.Black)
-            Text("Coordinates: ${uiState.coordinates.size}", color = Color.Black)
+            Text(formatDate(uiState.tripStartTime), color = Color.Black)
             if (uiState.coordinates.isEmpty() && !uiState.isLoading) {
                 Text("⚠ No coordinates found", color = Color.Red)
             } else if (uiState.coordinates.isNotEmpty()) {
+                Text("Points: ${uiState.coordinates.size}", color = Color.Black)
                 val first = uiState.coordinates.first()
                 val last = uiState.coordinates.last()
                 Text("From: ${String.format("%.4f", first.latitude)}, ${String.format("%.4f", first.longitude)}", color = Color.Black)

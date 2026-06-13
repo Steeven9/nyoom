@@ -1,5 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+  <!-- Dark Blue Palette -->
+  <!-- Primary:     #0D47A1  (Material Blue 900) -->
+  <!-- Accent:      #1565C0  (Material Blue 800) -->
+  <!-- Dark:        #002171  (Material Blue 900 shade) -->
+
   <style name="Theme.Nyoom" parent="android:Theme.Material.Light">
+
+    <!-- ── App Bar / Toolbar ─────────────────────────────────── -->
+    <item name="android:colorPrimary">#0D47A1</item>
+    <item name="android:colorPrimaryDark">#002171</item>   <!-- status bar -->
+
+    <!-- ── Accent: buttons, checkboxes, switches, menus, FABs ── -->
+    <item name="android:colorAccent">#1565C0</item>
+
+    <!-- ── Text on primary-colored surfaces (e.g. toolbar title) -->
+    <item name="android:textColorPrimary">@android:color/white</item>
+
+    <!-- ── Navigation bar (bottom system bar) ───────────────── -->
+    <item name="android:navigationBarColor">#002171</item>
+
+    <!-- ── Highlighted / selected text & handles ─────────────── -->
+    <item name="android:colorControlActivated">#1565C0</item>   <!-- tint when active   -->
+    <item name="android:colorControlHighlight">#1A1565C0</item> <!-- ripple / highlight -->
+
+    <!-- ── Window background ─────────────────────────────────── -->
+    <item name="android:windowBackground">@android:color/white</item>
+
   </style>
+
 </resources>

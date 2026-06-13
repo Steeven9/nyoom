@@ -26,6 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.colorspace.ColorSpaces
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -79,7 +80,7 @@ fun RidingScreen() {
         verticalArrangement = Arrangement.SpaceBetween,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Let's go!", fontSize = 32.sp)
+        Text(if (uiState.isPaused) "Breathing..." else if (uiState.isRunning) "nyoom!" else "Let's go!", fontSize = 32.sp)
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -119,6 +120,7 @@ fun RidingScreen() {
             }
         }
 
+        val green = Color.hsl(105F, 0.933F, 0.412F)
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             if (!uiState.isRunning) {
                 Button(onClick = {
@@ -131,17 +133,17 @@ fun RidingScreen() {
                     } else {
                         permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
                     }
-                }, colors = ButtonDefaults.buttonColors(containerColor = Color.Green)) {
+                }, colors = ButtonDefaults.buttonColors(containerColor = green)) {
                     Text("Start")
                 }
             } else {
-                if (!uiState.isPaused) {
-                    Button(onClick = { viewModel.pause() }) {
-                        Text("Pause")
+                if (uiState.isPaused) {
+                    Button(onClick = { viewModel.resume() }, colors = ButtonDefaults.buttonColors(containerColor = green)) {
+                        Text("Resume")
                     }
                 } else {
-                    Button(onClick = { viewModel.resume() }, colors = ButtonDefaults.buttonColors(containerColor = Color.Green)) {
-                        Text("Resume")
+                    Button(onClick = { viewModel.pause() }, colors = ButtonDefaults.buttonColors(containerColor = Color.Yellow, contentColor = Color.Black)) {
+                        Text("Pause")
                     }
                 }
                 Button(onClick = {

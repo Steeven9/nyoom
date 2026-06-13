@@ -28,9 +28,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.nyoom.data.model.Trip
 import com.nyoom.ui.LocalTripRepository
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
+import com.nyoom.util.DateTimeUtils.formatDate
+import com.nyoom.util.DateTimeUtils.formatDuration
 
 @Composable
 fun DiaryScreen(navController: NavController) {
@@ -74,7 +73,6 @@ private fun TripCard(trip: Trip, navController: NavController, onDelete: () -> U
         navController.navigate("map/${trip.id}")
     }) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text("Trip ID: ${trip.id}")
             Text(formatDate(trip.startTime), fontWeight = FontWeight.Bold, fontSize = 16.sp)
             Text("Distance: ${String.format("%.2f", trip.distanceKm)} km")
             if (trip.endTime != null) {
@@ -99,13 +97,4 @@ private fun TripCard(trip: Trip, navController: NavController, onDelete: () -> U
     }
 }
 
-private fun formatDate(timestamp: Long): String {
-    return SimpleDateFormat("MMM dd, yyyy HH:mm", Locale.getDefault()).format(Date(timestamp))
-}
 
-private fun formatDuration(ms: Long): String {
-    val seconds = (ms / 1000) % 60
-    val minutes = (ms / 60000) % 60
-    val hours = ms / 3600000
-    return "%02d:%02d:%02d".format(hours, minutes, seconds)
-}
