@@ -84,23 +84,23 @@ fun RidingScreen() {
 
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.fillMaxWidth().padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("${formatTime(elapsedTimeMs)}", fontSize = 48.sp)
+                Text("${String.format("%.1f", uiState.currentSpeedKmh)} km/h", fontSize = 44.sp)
                 Spacer(modifier = Modifier.height(8.dp))
-                Text("Time")
+                Text("Speed", fontSize = 24.sp)
             }
         }
 
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
                 Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("${String.format("%.2f", uiState.distanceKm)} km", fontSize = 20.sp)
-                    Text("Distance")
+                    Text("${String.format("%.2f", uiState.distanceKm)} km", fontSize = 28.sp)
+                    Text("Distance", fontSize = 16.sp)
                 }
             }
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
                 Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("${String.format("%.1f", uiState.currentSpeedKmh)} km/h", fontSize = 20.sp)
-                    Text("Speed")
+                    Text(formatTime(elapsedTimeMs), fontSize = 28.sp)
+                    Text("Time", fontSize = 16.sp)
                 }
             }
         }
@@ -108,14 +108,14 @@ fun RidingScreen() {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
                 Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("${String.format("%.1f", uiState.avgSpeedKmh)} km/h", fontSize = 16.sp)
-                    Text("Avg Speed")
+                    Text("${String.format("%.1f", uiState.avgSpeedKmh)} km/h", fontSize = 28.sp)
+                    Text("Avg Speed", fontSize = 16.sp)
                 }
             }
             Card(modifier = Modifier.weight(1f).padding(8.dp)) {
                 Column(modifier = Modifier.fillMaxWidth().padding(12.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("${String.format("%.1f", uiState.maxSpeedKmh)} km/h", fontSize = 16.sp)
-                    Text("Max Speed")
+                    Text("${String.format("%.1f", uiState.maxSpeedKmh)} km/h", fontSize = 28.sp)
+                    Text("Max Speed", fontSize = 16.sp)
                 }
             }
         }
